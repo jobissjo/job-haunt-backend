@@ -1,0 +1,4 @@
+SMTP_EMAIL_TYPE = 'smtp'
+SENDGRID_EMAIL_TYPE = 'sendgrid'
+MAILGUN_EMAIL_TYPE = 'mailgun'
+SES_EMAIL_TYPE = 'ses'

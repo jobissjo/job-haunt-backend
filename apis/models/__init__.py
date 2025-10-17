@@ -1,3 +1,4 @@
-from .user import CustomUser
+from .user_management import CustomUser
+from .general_settings import EmailProviderSetting, EmailLog
 
-__all__ = ['CustomUser']
+__all__ = ['CustomUser', 'EmailProviderSetting', 'EmailLog']

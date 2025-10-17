@@ -44,6 +44,11 @@ INSTALLED_APPS = [
     'apis'
 ]
 
+AUTHENTICATION_BACKENDS = [
+    'apis.backends.EmailPhoneUsernameBackend',
+    'django.contrib.auth.backends.ModelBackend',
+]
+
 MIDDLEWARE = [
     "django.middleware.security.SecurityMiddleware",
     "django.contrib.sessions.middleware.SessionMiddleware",
@@ -165,6 +170,7 @@ REST_FRAMEWORK = {
         'rest_framework_simplejwt.authentication.JWTAuthentication',
     ),
     'DEFAULT_SCHEMA_CLASS': 'drf_spectacular.openapi.AutoSchema',
+    'EXCEPTION_HANDLER': 'apis.exceptions.custom_exception_handler',
 }
 
 SPECTACULAR_SETTINGS = {
