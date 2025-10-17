@@ -12,6 +12,7 @@ from apis.serializers import (
     ForgotPasswordSerializer,
     ResetPasswordSerializer,
     UserSerializer,
+    MessageSerializer
 )
 from apis.services.email_service import EmailService
 
@@ -74,7 +75,9 @@ class CustomTokenRefreshView(TokenRefreshView):
 @extend_schema(
     summary="Logout",
     description="Blacklist the refresh token to logout user",
-    tags=["Authentication"]
+    tags=["Authentication"],
+    request=None,
+    responses={200: MessageSerializer}
 )
 class LogoutView(APIView):
     permission_classes = [permissions.IsAuthenticated]
@@ -106,7 +109,8 @@ class LogoutView(APIView):
     summary="Change password",
     description="Change password for authenticated user",
     tags=["Authentication"],
-    request=ChangePasswordSerializer
+    request=ChangePasswordSerializer,
+    responses={200: MessageSerializer}
 )
 class ChangePasswordView(APIView):
     permission_classes = [permissions.IsAuthenticated]
@@ -131,9 +135,11 @@ class ChangePasswordView(APIView):
     summary="Forgot password",
     description="Request a password reset token. An email will be sent to the user with reset instructions.",
     tags=["Authentication"],
-    request=ForgotPasswordSerializer
+    request=ForgotPasswordSerializer,
+    responses={200: MessageSerializer}
 )
 class ForgotPasswordView(APIView):
+
     permission_classes = [permissions.AllowAny]
     
     def post(self, request):
@@ -181,7 +187,8 @@ class ForgotPasswordView(APIView):
     summary="Reset password",
     description="Reset password using the token received via email",
     tags=["Authentication"],
-    request=ResetPasswordSerializer
+    request=ResetPasswordSerializer,
+    responses={200: MessageSerializer}
 )
 class ResetPasswordView(APIView):
     permission_classes = [permissions.AllowAny]

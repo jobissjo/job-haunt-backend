@@ -23,6 +23,7 @@ from .auth_serializers import (
     ForgotPasswordSerializer,
     ResetPasswordSerializer,
 )
+from .common_serializers import MessageSerializer
 
 __all__ = [
     'UserSerializer',
@@ -42,4 +43,5 @@ __all__ = [
     'ChangePasswordSerializer',
     'ForgotPasswordSerializer',
     'ResetPasswordSerializer',
+    'MessageSerializer',
 ]
