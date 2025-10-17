@@ -30,6 +30,10 @@ class CustomUserManager(BaseUserManager):
 
 
 class CustomUser(AbstractBaseUser, PermissionsMixin):
+    ROLE_TYPES = (
+        ('user', 'User'),
+        ('admin', 'Admin'),
+    )
     phone_regex = RegexValidator(
         regex=r'^\+?1?\d{9,15}$',
         message="Phone number must be entered in the format: '+999999999'. Up to 15 digits allowed."
@@ -40,7 +44,7 @@ class CustomUser(AbstractBaseUser, PermissionsMixin):
     username = models.CharField(max_length=150, unique=True)
     email = models.EmailField(unique=True)
     phone_number = models.CharField(validators=[phone_regex], max_length=17, unique=True)
-    
+    role = models.CharField(max_length=10, choices=ROLE_TYPES, default='user')    
     is_active = models.BooleanField(default=True)
     is_staff = models.BooleanField(default=False)
     date_joined = models.DateTimeField(auto_now_add=True)
