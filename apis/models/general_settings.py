@@ -1,6 +1,7 @@
 from django.db import models
 from django.utils import timezone
 
+
 class EmailProviderSetting(models.Model):
     PROVIDER_TYPES = [
         ("smtp", "SMTP"),
@@ -28,18 +29,22 @@ class EmailProviderSetting(models.Model):
             EmailProviderSetting.objects.exclude(pk=self.pk).update(is_active=False)
         super().save(*args, **kwargs)
 
-
     def __str__(self):
         return f"{self.name} ({self.provider_type})"
 
 
 class EmailLog(models.Model):
+    LOG_STATUS_CHOICES = [
+        ("sent", "Sent"),
+        ("failed", "Failed"),
+    ]
+    template_name = models.CharField(max_length=255)
     subject = models.CharField(max_length=255)
     body = models.JSONField()
     to = models.CharField(max_length=255)
     email_provider = models.ForeignKey(EmailProviderSetting, on_delete=models.CASCADE)
     sent_at = models.DateTimeField(auto_now_add=True)
-    status = models.CharField(max_length=20)
+    status = models.CharField(max_length=20, choices=LOG_STATUS_CHOICES)
     error_message = models.TextField(blank=True, null=True)
 
     def __str__(self):
