@@ -3,7 +3,9 @@ from .user_serializers import (
     UserCreateSerializer,
     ProfileSerializer,
     UserSkillsSerializer,
+    
 )
+
 from .job_serializers import (
     JobApplicationStatusSerializer,
     JobSkillsSerializer,
@@ -22,6 +24,7 @@ from .auth_serializers import (
     ChangePasswordSerializer,
     ForgotPasswordSerializer,
     ResetPasswordSerializer,
+    LogoutSerializer
 )
 from .common_serializers import MessageSerializer
 
@@ -44,4 +47,5 @@ __all__ = [
     'ForgotPasswordSerializer',
     'ResetPasswordSerializer',
     'MessageSerializer',
+    'LogoutSerializer',
 ]

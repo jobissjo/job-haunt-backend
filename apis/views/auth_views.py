@@ -12,7 +12,8 @@ from apis.serializers import (
     ForgotPasswordSerializer,
     ResetPasswordSerializer,
     UserSerializer,
-    MessageSerializer
+    MessageSerializer,
+    LogoutSerializer,
 )
 from apis.services.email_service import EmailService
 
@@ -76,7 +77,7 @@ class CustomTokenRefreshView(TokenRefreshView):
     summary="Logout",
     description="Blacklist the refresh token to logout user",
     tags=["Authentication"],
-    request=None,
+    request=LogoutSerializer,
     responses={200: MessageSerializer}
 )
 class LogoutView(APIView):
