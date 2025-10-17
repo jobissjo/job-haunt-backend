@@ -12,4 +12,5 @@ dependencies = [
     "djangorestframework-simplejwt[crypto]>=5.5.1",
     "drf-spectacular>=0.28.0",
     "isort>=7.0.0",
+    "pillow>=12.0.0",
 ]
