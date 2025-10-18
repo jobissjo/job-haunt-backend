@@ -16,6 +16,7 @@ from apis.views import (
     ProfileRetrieveUpdateDestroyView,
     UserSkillsListCreateView,
     UserSkillsRetrieveUpdateDestroyView,
+    UpdateUserProfileView,
     # Job views
     JobApplicationStatusListCreateView,
     JobApplicationStatusRetrieveUpdateDestroyView,
@@ -30,6 +31,7 @@ from apis.views import (
     LearningManagementRetrieveUpdateDestroyView,
     LearningResourceListCreateView,
     LearningResourceRetrieveUpdateDestroyView,
+    GetOrUpdateUserNotificationPreferenceView,
 )
 
 urlpatterns = [
@@ -43,9 +45,12 @@ urlpatterns = [
     path('auth/reset-password/', ResetPasswordView.as_view(), name='reset_password'),
     path('auth/me/', CurrentUserView.as_view(), name='current_user'),
     
+    
     # User endpoints
+    path('update-user-profile/', UpdateUserProfileView.as_view(), name='update_user_profile'),
     path('users/', UserListCreateView.as_view(), name='user_list_create'),
     path('users/<int:pk>/', UserRetrieveUpdateDestroyView.as_view(), name='user_detail'),
+    path('notification-preference/', GetOrUpdateUserNotificationPreferenceView.as_view(), name='notification_preference'),
     
     # Profile endpoints
     path('profiles/', ProfileListView.as_view(), name='profile_list'),

@@ -1,6 +1,6 @@
 from rest_framework import serializers
 from apis import models
-from apis.models.user_management import CustomUser, Profile, SocialLink
+from apis.models.user_management import CustomUser, Profile, SocialLink, NotificationPreference
 from apis.models.job_management import UserSkills, JobSkills
 
 
@@ -19,7 +19,7 @@ class SocialMediaLinkSerializer(serializers.ModelSerializer):
 
 class UserSerializer(serializers.ModelSerializer):
     profile = ProfileSerializer(read_only=True)
-    social_links = SocialMediaLinkSerializer(allow_null=True)
+    
     
     class Meta:
         model = CustomUser
@@ -29,13 +29,17 @@ class UserSerializer(serializers.ModelSerializer):
         ]
         read_only_fields = ['id', 'date_joined', 'role', ]
     
-    def create(self, validated_data):
-        profile_data = validated_data.pop('profile')
-        social_links_data = validated_data.pop('social_links')
-        user = CustomUser.objects.create(**validated_data)
-        Profile.objects.create(user=user, **profile_data)
-        SocialLink.objects.create(user=user, **social_links_data)
-        return user
+    
+class UserUpdateSerializer(serializers.ModelSerializer):
+    social_links = SocialMediaLinkSerializer(allow_null=True)
+    profile = ProfileSerializer(allow_null=True)
+    class Meta:
+        model = CustomUser
+        fields = [
+            'username', 'email', 'phone_number', 'first_name', 
+            'last_name', 'role', 'is_active', 'date_joined', 'profile', 'social_links'
+        ]
+        read_only_fields = ['id', 'date_joined', 'role', ]
 
     def update(self, instance, validated_data):
         profile_data = validated_data.pop('profile')
@@ -93,3 +97,17 @@ class UserSkillsSerializer(serializers.ModelSerializer):
         else:
             raise serializers.ValidationError("User is not authenticated")
         return super().create(validated_data)
+
+
+class NotificationPreferenceSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = NotificationPreference
+        fields = ['id', 'user', 'email', 'push', 'in_app', 'created_at', 'updated_at']
+        read_only_fields = ['id', 'created_at', 'updated_at', 'user']
+    
+    def update(self, instance, validated_data):
+        instance.email = validated_data.get('email', instance.email)
+        instance.push = validated_data.get('push', instance.push)
+        instance.in_app = validated_data.get('in_app', instance.in_app)
+        instance.save()
+        return instance

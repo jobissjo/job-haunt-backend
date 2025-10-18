@@ -1,3 +1,4 @@
+from turtle import mode
 from django.contrib.auth.models import (
     AbstractBaseUser,
     BaseUserManager,
@@ -92,6 +93,35 @@ class SocialLink(models.Model):
     def __str__(self):
         return f"Social Media Links for {self.user.username} - {self.user.first_name} {self.user.last_name}"
 
+
+class UserEmailSetting(models.Model):
+    user = models.ForeignKey(CustomUser, on_delete=models.CASCADE, related_name="user_email_settings")
+    from_email = models.EmailField()
+    username = models.CharField(max_length=255, blank=True, null=True)
+    password = models.CharField(max_length=255, blank=True, null=True)
+    use_tls = models.BooleanField(default=True)
+    use_ssl = models.BooleanField(default=False)
+    host = models.CharField(max_length=255, blank=True, null=True)
+    port = models.PositiveIntegerField(blank=True, null=True)
+    is_active = models.BooleanField(default=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    def __str__(self):
+        return f"Email Settings for {self.user.username} - {self.user.first_name} {self.user.last_name}"
+
+
+class NotificationPreference(models.Model):
+    user = models.OneToOneField(CustomUser, on_delete=models.CASCADE, related_name="notification_preference")
+    email = models.BooleanField(default=True)
+    push = models.BooleanField(default=True)
+    in_app = models.BooleanField(default=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    def __str__(self):
+        return f"Notification Preferences for {self.user.username} - {self.user.first_name} {self.user.last_name}"
+    
 
 
 

@@ -15,6 +15,8 @@ from .user_views import (
     ProfileRetrieveUpdateDestroyView,
     UserSkillsListCreateView,
     UserSkillsRetrieveUpdateDestroyView,
+    UpdateUserProfileView,
+    GetOrUpdateUserNotificationPreferenceView,
 )
 from .job_views import (
     JobApplicationStatusListCreateView,
@@ -50,6 +52,8 @@ __all__ = [
     'ProfileRetrieveUpdateDestroyView',
     'UserSkillsListCreateView',
     'UserSkillsRetrieveUpdateDestroyView',
+    'UpdateUserProfileView',
+    'GetOrUpdateUserNotificationPreferenceView',
     # Job views
     'JobApplicationStatusListCreateView',
     'JobApplicationStatusRetrieveUpdateDestroyView',

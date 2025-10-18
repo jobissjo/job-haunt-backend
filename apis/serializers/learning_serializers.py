@@ -6,7 +6,15 @@ class LearningManagementStatusSerializer(serializers.ModelSerializer):
     class Meta:
         model = LearningManagementStatus
         fields = ['id', 'name', 'category', 'color', 'user']
-        read_only_fields = ['id']
+        read_only_fields = ['id', 'user']
+    
+    def create(self, validated_data):
+        request = self.context.get('request')
+        if request and request.user.is_authenticated:
+            validated_data['user'] = request.user
+        else:
+            raise serializers.ValidationError("User is not authenticated")
+        return super().create(validated_data)
 
 
 class LearningResourceSerializer(serializers.ModelSerializer):
@@ -33,7 +41,15 @@ class LearningManagementSerializer(serializers.ModelSerializer):
             'id', 'name', 'description', 'expected_started_date',
             'expected_completed_date', 'actual_started_date',
             'actual_completed_date', 'status', 'status_detail',
-            'completed_percentage', 'user', 'resources',
+            'completed_percentage',  'resources',
             'created_at', 'updated_at'
         ]
-        read_only_fields = ['id', 'created_at', 'updated_at']
+        read_only_fields = ['id', 'created_at', 'updated_at', 'user']
+    
+    def create(self, validated_data):
+        request = self.context.get('request')
+        if request and request.user.is_authenticated:
+            validated_data['user'] = request.user
+        else:
+            raise serializers.ValidationError("User is not authenticated")
+        return super().create(validated_data)

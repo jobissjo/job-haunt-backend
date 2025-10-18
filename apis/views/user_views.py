@@ -1,12 +1,16 @@
+from nt import error
 from rest_framework import generics, permissions
 from drf_spectacular.utils import extend_schema, extend_schema_view
-from apis.models import CustomUser, Profile, UserSkills
+from apis.models import CustomUser, Profile, UserSkills, NotificationPreference
 from apis.serializers import (
     UserSerializer,
     UserCreateSerializer,
     ProfileSerializer,
     UserSkillsSerializer,
+    UserUpdateSerializer,
+    NotificationPreferenceSerializer
 )
+from apis.utils.common import ServiceError
 
 
 @extend_schema_view(
@@ -190,3 +194,32 @@ class UserSkillsRetrieveUpdateDestroyView(generics.RetrieveUpdateDestroyAPIView)
         if self.request.user.is_staff:
             return UserSkills.objects.all()
         return UserSkills.objects.filter(user=self.request.user)
+
+
+
+class UpdateUserProfileView(generics.UpdateAPIView):
+    queryset = CustomUser.objects.all()
+    serializer_class = UserUpdateSerializer
+    permission_classes = [permissions.IsAuthenticated]
+    
+    def get_object(self):
+        if self.request.user.is_authenticated:
+            return self.request.user
+        raise ServiceError(error_message='User not authenticated', error_code=401)
+
+    def perform_update(self, serializer):
+        serializer.save()
+        
+
+
+class GetOrUpdateUserNotificationPreferenceView(generics.RetrieveUpdateAPIView):
+    queryset = NotificationPreference.objects.all()
+    serializer_class = NotificationPreferenceSerializer
+    permission_classes = [permissions.IsAuthenticated]
+    
+    def get_object(self):
+        if self.request.user.is_authenticated:
+            if hasattr(self.request.user, 'notification_preference'):
+                return self.request.user.notification_preference
+            return NotificationPreference.objects.create(user=self.request.user)
+        raise ServiceError(error_message='User not authenticated', error_code=401)

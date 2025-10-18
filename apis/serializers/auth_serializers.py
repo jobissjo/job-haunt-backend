@@ -1,7 +1,7 @@
 from rest_framework import serializers
 from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
 from django.contrib.auth import authenticate
-from apis.models.user_management import CustomUser, Profile
+from apis.models.user_management import CustomUser, Profile, NotificationPreference
 
 
 class RegisterSerializer(serializers.ModelSerializer):
@@ -23,6 +23,7 @@ class RegisterSerializer(serializers.ModelSerializer):
         user = CustomUser.objects.create_user(password=password, **validated_data)
         # Create profile automatically
         Profile.objects.create(user=user)
+        NotificationPreference.objects.create(user=user)
         return user
 
 
