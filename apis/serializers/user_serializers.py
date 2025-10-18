@@ -1,5 +1,6 @@
 from rest_framework import serializers
-from apis.models.user_management import CustomUser, Profile
+from apis import models
+from apis.models.user_management import CustomUser, Profile, SocialLink
 from apis.models.job_management import UserSkills, JobSkills
 
 
@@ -9,16 +10,40 @@ class ProfileSerializer(serializers.ModelSerializer):
         fields = ['id', 'bio', 'profile_picture', 'cover_photo']
 
 
+class SocialMediaLinkSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = SocialLink
+        fields = '__all__'
+        read_only_fields = ['id', 'user']
+
+
 class UserSerializer(serializers.ModelSerializer):
     profile = ProfileSerializer(read_only=True)
+    social_links = SocialMediaLinkSerializer(allow_null=True)
     
     class Meta:
         model = CustomUser
         fields = [
             'id', 'username', 'email', 'phone_number', 'first_name', 
-            'last_name', 'role', 'is_active', 'date_joined', 'profile'
+            'last_name', 'role', 'is_active', 'date_joined', 'profile', 'social_links'
         ]
-        read_only_fields = ['id', 'date_joined', 'role']
+        read_only_fields = ['id', 'date_joined', 'role', ]
+    
+    def create(self, validated_data):
+        profile_data = validated_data.pop('profile')
+        social_links_data = validated_data.pop('social_links')
+        user = CustomUser.objects.create(**validated_data)
+        Profile.objects.create(user=user, **profile_data)
+        SocialLink.objects.create(user=user, **social_links_data)
+        return user
+
+    def update(self, instance, validated_data):
+        profile_data = validated_data.pop('profile')
+        social_links_data = validated_data.pop('social_links')
+        instance = super().update(instance, validated_data)
+        Profile.objects.update_or_create(user=instance, defaults=profile_data)
+        SocialLink.objects.update_or_create(user=instance, defaults=social_links_data)
+        return instance
 
 
 class UserCreateSerializer(serializers.ModelSerializer):
@@ -59,4 +84,12 @@ class UserSkillsSerializer(serializers.ModelSerializer):
     class Meta:
         model = UserSkills
         fields = ['id', 'user', 'skill', 'skill_detail', 'level', 'confidence', 'created_at', 'updated_at']
-        read_only_fields = ['id', 'created_at', 'updated_at']
+        read_only_fields = ['id', 'created_at', 'updated_at', 'user', 'skill']
+
+    def create(self, validated_data):
+        request = self.context.get('request')
+        if request and request.user.is_authenticated:
+            validated_data['user'] = request.user
+        else:
+            raise serializers.ValidationError("User is not authenticated")
+        return super().create(validated_data)

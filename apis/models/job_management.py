@@ -52,6 +52,7 @@ class UserSkills(models.Model):
     LEVEL_CHOICES = [
         ("beginner", "Beginner"),
         ("intermediate", "Intermediate"),
+        ("advanced", "Advanced"),
         ("expert", "Expert"),
     ]
     user = models.ForeignKey(CustomUser, on_delete=models.CASCADE)

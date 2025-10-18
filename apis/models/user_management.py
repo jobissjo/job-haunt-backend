@@ -75,6 +75,23 @@ class Profile(models.Model):
         upload_to="profile_pictures/", blank=True, null=True
     )
     cover_photo = models.ImageField(upload_to="cover_photos/", blank=True, null=True)
+    resume = models.FileField(upload_to="resumes/", blank=True, null=True)
 
     def __str__(self):
         return f"{self.user.username} - {self.user.first_name} {self.user.last_name}"
+
+
+class SocialLink(models.Model):
+    user = models.OneToOneField(CustomUser, on_delete=models.CASCADE, related_name="social_links")
+    linkedin = models.URLField(blank=True, null=True)
+    github = models.URLField(blank=True, null=True)
+    twitter = models.URLField(blank=True, null=True)
+    facebook = models.URLField(blank=True, null=True)
+    instagram = models.URLField(blank=True, null=True)
+
+    def __str__(self):
+        return f"Social Media Links for {self.user.username} - {self.user.first_name} {self.user.last_name}"
+
+
+
+
