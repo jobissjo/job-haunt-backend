@@ -34,7 +34,10 @@ from .learning_views import (
     LearningResourceListCreateView,
     LearningResourceRetrieveUpdateDestroyView,
 )
-
+from .kanban_board_views import (
+    KanbanBoardLearningPlanView,
+    KanbanBoardLearningResourceView,
+)
 __all__ = [
     # Auth views
     'RegisterView',
@@ -68,4 +71,7 @@ __all__ = [
     'LearningManagementRetrieveUpdateDestroyView',
     'LearningResourceListCreateView',
     'LearningResourceRetrieveUpdateDestroyView',
+    # Kanbanboard Views
+    'KanbanBoardLearningPlanView',
+    'KanbanBoardLearningResourceView',
 ]

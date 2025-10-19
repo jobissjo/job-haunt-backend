@@ -32,6 +32,10 @@ from apis.views import (
     LearningResourceListCreateView,
     LearningResourceRetrieveUpdateDestroyView,
     GetOrUpdateUserNotificationPreferenceView,
+
+    # Kanbanboard Views
+    KanbanBoardLearningPlanView,
+    KanbanBoardLearningResourceView,
 )
 
 urlpatterns = [
@@ -83,4 +87,8 @@ urlpatterns = [
     # Learning Resource endpoints
     path('learning-resources/', LearningResourceListCreateView.as_view(), name='learning_resource_list_create'),
     path('learning-resources/<int:pk>/', LearningResourceRetrieveUpdateDestroyView.as_view(), name='learning_resource_detail'),
+
+    # KanbanBoardView
+    path('kanban-board-learning-plans/', KanbanBoardLearningPlanView.as_view(), name='kanban_board_learning_plans'),
+    path('kanban-board-learning-resources/', KanbanBoardLearningResourceView.as_view(), name='kanban_board_learning_resources'),
 ]

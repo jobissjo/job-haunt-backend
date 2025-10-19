@@ -1,3 +1,4 @@
+from drf_spectacular.utils import extend_schema_field
 from rest_framework import serializers
 from apis.models.learning_managment import LearningManagementStatus, LearningManagement, LearningResource
 
@@ -53,3 +54,30 @@ class LearningManagementSerializer(serializers.ModelSerializer):
         else:
             raise serializers.ValidationError("User is not authenticated")
         return super().create(validated_data)
+
+
+class KanbanBoardLearningPlanSerializer(serializers.ModelSerializer):
+    learning_managements = serializers.SerializerMethodField()
+    class Meta:
+        model = LearningManagementStatus
+        fields = '__all__'
+
+    @extend_schema_field(LearningManagementSerializer(many=True))
+    def get_learning_managements(self, obj):
+        return LearningManagementSerializer(obj.learning_managements.order_by('-created_at'), many=True).data
+
+
+class KanbanBoardLearningResourceSerializer(serializers.ModelSerializer):
+    learning_resources = serializers.SerializerMethodField()
+    class Meta:
+        model = LearningManagementStatus
+        fields = '__all__'
+    
+    @extend_schema_field(LearningResourceSerializer(many=True))
+    def get_learning_resources(self, obj):
+        learning_management_id = self.context.get('learning_management_id')
+        if learning_management_id:
+            learning_resources = obj.learning_resources.filter(learning_management_id=learning_management_id).order_by('-created_at')
+        else:
+            learning_resources = obj.learning_resources.order_by('-created_at')
+        return LearningResourceSerializer(learning_resources, many=True).data

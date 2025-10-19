@@ -17,6 +17,8 @@ from .learning_serializers import (
     LearningManagementStatusSerializer,
     LearningManagementSerializer,
     LearningResourceSerializer,
+    KanbanBoardLearningPlanSerializer,
+    KanbanBoardLearningResourceSerializer,
 )
 from .auth_serializers import (
     RegisterSerializer,
@@ -42,6 +44,8 @@ __all__ = [
     'LearningManagementStatusSerializer',
     'LearningManagementSerializer',
     'LearningResourceSerializer',
+    'KanbanBoardLearningPlanSerializer',
+    'KanbanBoardLearningResourceSerializer',
     'RegisterSerializer',
     'LoginSerializer',
     'CustomTokenObtainPairSerializer',

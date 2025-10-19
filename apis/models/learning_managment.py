@@ -14,7 +14,7 @@ class LearningManagementStatus(models.Model):
     user = models.ForeignKey(CustomUser, on_delete=models.CASCADE)
 
     def __str__(self):
-        return self.name
+        return f"{self.name}-{self.category}"
 
 
 class LearningManagement(models.Model):
@@ -24,14 +24,14 @@ class LearningManagement(models.Model):
     expected_completed_date = models.DateField()
     actual_started_date = models.DateField(null=True, blank=True)
     actual_completed_date = models.DateField(null=True, blank=True)
-    status = models.ForeignKey(LearningManagementStatus, on_delete=models.CASCADE)
+    status = models.ForeignKey(LearningManagementStatus, on_delete=models.CASCADE, related_name='learning_managements')
     completed_percentage = models.IntegerField(default=0)
     user = models.ForeignKey(CustomUser, on_delete=models.CASCADE)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
     def __str__(self):
-        return self.name
+        return f"{self.name}-{self.status.name}"
 
 
 class LearningResource(models.Model):
@@ -47,7 +47,7 @@ class LearningResource(models.Model):
     learning_management = models.ForeignKey(
         LearningManagement, on_delete=models.CASCADE
     )
-    status = models.ForeignKey(LearningManagementStatus, on_delete=models.CASCADE)
+    status = models.ForeignKey(LearningManagementStatus, on_delete=models.CASCADE, related_name='learning_resources')
     expected_started_date = models.DateField()
     expected_completed_date = models.DateField()
     actual_started_date = models.DateField(null=True, blank=True)
