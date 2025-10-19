@@ -19,6 +19,7 @@ class SocialMediaLinkSerializer(serializers.ModelSerializer):
 
 class UserSerializer(serializers.ModelSerializer):
     profile = ProfileSerializer(read_only=True)
+    social_links = SocialMediaLinkSerializer(read_only=True)
     
     
     class Meta:
@@ -31,23 +32,51 @@ class UserSerializer(serializers.ModelSerializer):
     
     
 class UserUpdateSerializer(serializers.ModelSerializer):
-    social_links = SocialMediaLinkSerializer(allow_null=True)
-    profile = ProfileSerializer(allow_null=True)
+    bio = serializers.CharField(allow_blank=True, required=False)
+    profile_picture = serializers.ImageField(allow_null=True, required=False)
+    cover_photo = serializers.ImageField(allow_null=True, required=False)
+    linkedin = serializers.URLField(allow_null=True, required=False)
+    github = serializers.URLField(allow_null=True, required=False)
+    twitter = serializers.URLField(allow_null=True, required=False)
+    facebook = serializers.URLField(allow_null=True, required=False)
+    instagram = serializers.URLField(allow_null=True, required=False)
+
     class Meta:
         model = CustomUser
         fields = [
             'username', 'email', 'phone_number', 'first_name', 
-            'last_name', 'role', 'is_active', 'date_joined', 'profile', 'social_links'
+            'last_name', 'role',  'date_joined', 'bio',  'profile_picture', 'cover_photo', 'linkedin', 'github', 'twitter', 'facebook', 'instagram'
         ]
-        read_only_fields = ['id', 'date_joined', 'role', ]
+        read_only_fields = ['id', 'date_joined', 'role', 'email', 'username', 'is_active']
 
     def update(self, instance, validated_data):
-        profile_data = validated_data.pop('profile')
-        social_links_data = validated_data.pop('social_links')
+        bio = validated_data.pop('bio')
+        profile_picture = validated_data.pop('profile_picture', None)
+        cover_photo = validated_data.pop('cover_photo', None)
+        linkedin = validated_data.pop('linkedin', None)
+        github = validated_data.pop('github', None)
+        twitter = validated_data.pop('twitter', None)
+        facebook = validated_data.pop('facebook', None)
+        instagram = validated_data.pop('instagram', None)
+
         instance = super().update(instance, validated_data)
-        Profile.objects.update_or_create(user=instance, defaults=profile_data)
-        SocialLink.objects.update_or_create(user=instance, defaults=social_links_data)
+        Profile.objects.update_or_create(user=instance, defaults={
+            'bio': bio,
+            'profile_picture': profile_picture,
+            'cover_photo': cover_photo
+        })
+        SocialLink.objects.update_or_create(user=instance, defaults={
+            'linkedin': linkedin,
+            'github': github,
+            'twitter': twitter,
+            'facebook': facebook,
+            'instagram': instagram
+        })
         return instance
+
+class UpdateUserResumeSerializer(serializers.Serializer):
+    resume = serializers.FileField()
+    
 
 
 class UserCreateSerializer(serializers.ModelSerializer):

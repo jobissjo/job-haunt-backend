@@ -17,6 +17,7 @@ from apis.views import (
     UserSkillsListCreateView,
     UserSkillsRetrieveUpdateDestroyView,
     UpdateUserProfileView,
+    UpdateUserResumeView,
     # Job views
     JobApplicationStatusListCreateView,
     JobApplicationStatusRetrieveUpdateDestroyView,
@@ -52,6 +53,7 @@ urlpatterns = [
     
     # User endpoints
     path('update-user-profile/', UpdateUserProfileView.as_view(), name='update_user_profile'),
+    path('user/upload-resume/', UpdateUserResumeView.as_view(), name='update_user_resume'),
     path('users/', UserListCreateView.as_view(), name='user_list_create'),
     path('users/<int:pk>/', UserRetrieveUpdateDestroyView.as_view(), name='user_detail'),
     path('notification-preference/', GetOrUpdateUserNotificationPreferenceView.as_view(), name='notification_preference'),

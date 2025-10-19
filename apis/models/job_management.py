@@ -23,6 +23,8 @@ class JobApplication(models.Model):
     APPLICATION_THROUGH_CHOICES = [
         ("email", "Email"),
         ("website", "Website"),
+        ("linkedin", "LinkedIn"),
+        ('referral', 'Referral')
     ]
     position = models.CharField(max_length=100)
     company_name = models.CharField(max_length=100)

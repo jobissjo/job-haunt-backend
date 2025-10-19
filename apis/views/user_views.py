@@ -1,4 +1,5 @@
 from nt import error
+from rest_framework.response import Response
 from rest_framework import generics, permissions
 from drf_spectacular.utils import extend_schema, extend_schema_view
 from apis.models import CustomUser, Profile, UserSkills, NotificationPreference
@@ -8,7 +9,8 @@ from apis.serializers import (
     ProfileSerializer,
     UserSkillsSerializer,
     UserUpdateSerializer,
-    NotificationPreferenceSerializer
+    NotificationPreferenceSerializer,
+    UpdateUserResumeSerializer 
 )
 from apis.utils.common import ServiceError
 
@@ -209,6 +211,29 @@ class UpdateUserProfileView(generics.UpdateAPIView):
 
     def perform_update(self, serializer):
         serializer.save()
+
+
+class UpdateUserResumeView(generics.UpdateAPIView):
+    serializer_class = UpdateUserResumeSerializer
+
+    def get_object(self):
+        if self.request.user.is_authenticated:
+            return self.request.user
+        raise ServiceError(error_message='User not authenticated', error_code=401)
+
+    def update(self, request, *args, **kwargs):
+        instance = self.get_object()
+        resume = request.FILES.get('resume')
+        if resume:
+            if hasattr(instance, 'profile'):
+                instance.profile.resume = resume
+            else:
+                Profile.objects.create(user=instance, resume=resume)
+        instance.save()
+        return Response({'message': 'Resume updated successfully'}, status=200)
+
+        
+
         
 
 
