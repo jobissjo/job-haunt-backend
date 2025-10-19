@@ -1,4 +1,3 @@
-from nt import error
 from rest_framework.response import Response
 from rest_framework import generics, permissions
 from drf_spectacular.utils import extend_schema, extend_schema_view
