@@ -18,6 +18,8 @@ class JobApplicationSerializer(serializers.ModelSerializer):
     status_detail = JobApplicationStatusSerializer(source='status', read_only=True)
     skills_detail = JobSkillsSerializer(source='skills', many=True, read_only=True)
     preferred_skills_detail = JobSkillsSerializer(source='preferred_skills', many=True, read_only=True)
+    preferred_skills = serializers.PrimaryKeyRelatedField(queryset=JobSkills.objects.all(), many=True, required=False, allow_null=True)
+    skills = serializers.PrimaryKeyRelatedField(queryset=JobSkills.objects.all(), many=True, required=False, allow_null=True)
     
     class Meta:
         model = JobApplication
@@ -27,25 +29,25 @@ class JobApplicationSerializer(serializers.ModelSerializer):
             'preferred_skills', 'preferred_skills_detail', 'description',
             'required_experience', 'contact_mail', 'job_posted_date',
             'job_closed_date', 'application_through', 'application_url',
-            'user', 'created_at', 'updated_at'
+            'created_at', 'updated_at'
         ]
-        read_only_fields = ['id', 'created_at', 'updated_at']
+        read_only_fields = ['id', 'created_at', 'updated_at', 'user']
 
 
 class JobApplicationCreateSerializer(serializers.ModelSerializer):
+    preferred_skills = serializers.PrimaryKeyRelatedField(queryset=JobSkills.objects.all(), many=True, required=False, allow_null=True)
+    skills = serializers.PrimaryKeyRelatedField(queryset=JobSkills.objects.all(), many=True, required=False, allow_null=True)
     class Meta:
         model = JobApplication
         fields = [
             'position', 'company_name', 'location', 'applied_date',
             'status', 'skills', 'preferred_skills', 'description',
             'required_experience', 'contact_mail', 'job_posted_date',
-            'job_closed_date', 'application_through', 'application_url', 'user'
+            'job_closed_date', 'application_through', 'application_url',
         ]
     
-    def validate(self, attrs):
-        # Ensure user can only create applications for themselves
+    def create(self, validated_data):
         request = self.context.get('request')
         if request and hasattr(request, 'user'):
-            if attrs.get('user') != request.user and not request.user.is_staff:
-                raise serializers.ValidationError({"user": "You can only create applications for yourself"})
-        return attrs
+            validated_data['user'] = request.user
+        return super().create(validated_data)
