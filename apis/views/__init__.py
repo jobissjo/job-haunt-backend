@@ -17,7 +17,9 @@ from .user_views import (
     UserSkillsRetrieveUpdateDestroyView,
     UpdateUserProfileView,
     GetOrUpdateUserNotificationPreferenceView,
-    UpdateUserResumeView
+    UpdateUserResumeView,
+    UserEmailSettingListCreateView,
+    UserEmailSettingRetrieveUpdateDestroyView,
 )
 from .job_views import (
     JobApplicationStatusListCreateView,
@@ -58,7 +60,9 @@ __all__ = [
     'UserSkillsRetrieveUpdateDestroyView',
     'UpdateUserProfileView',
     'GetOrUpdateUserNotificationPreferenceView',
-    'UpdateUserResumeView'
+    'UpdateUserResumeView',
+    'UserEmailSettingListCreateView',
+    'UserEmailSettingRetrieveUpdateDestroyView',
     # Job views
     'JobApplicationStatusListCreateView',
     'JobApplicationStatusRetrieveUpdateDestroyView',
@@ -75,5 +79,5 @@ __all__ = [
     'LearningResourceRetrieveUpdateDestroyView',
     # Kanbanboard Views
     'KanbanBoardLearningPlanView',
-    'KanbanBoardLearningResourceView',
+    'KanbanBoardLearningResourceView',    
 ]

@@ -66,3 +66,14 @@ class UserSkills(models.Model):
 
     def __str__(self):
         return f"{self.user} - {self.skill} - {self.level} - {self.confidence}"
+
+
+class AutomationJobApplication(models.Model):
+    job_application = models.ForeignKey(JobApplication, on_delete=models.CASCADE)
+    user = models.ForeignKey(CustomUser, on_delete=models.CASCADE)
+    application_send_date = models.DateTimeField()
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    def __str__(self):
+        return f"{self.job_application} - {self.user} - {self.application_send_date}"

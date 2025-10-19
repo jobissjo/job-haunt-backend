@@ -5,7 +5,8 @@ from .user_serializers import (
     UserSkillsSerializer,
     UserUpdateSerializer,
     NotificationPreferenceSerializer,
-    UpdateUserResumeSerializer
+    UpdateUserResumeSerializer,
+    UserEmailSettingSerializer
 )
 
 from .job_serializers import (
@@ -56,5 +57,6 @@ __all__ = [
     'MessageSerializer',
     'LogoutSerializer',
     'NotificationPreferenceSerializer',
-    'UpdateUserResumeSerializer'
+    'UpdateUserResumeSerializer',
+    'UserEmailSettingSerializer'
 ]

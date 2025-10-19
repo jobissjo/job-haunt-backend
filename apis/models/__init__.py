@@ -1,4 +1,4 @@
-from .user_management import CustomUser, Profile, NotificationPreference
+from .user_management import CustomUser, Profile, NotificationPreference, UserEmailSetting
 from .general_settings import EmailProviderSetting, EmailLog
 from .auth_models import PasswordResetToken
 from .job_management import JobApplicationStatus, JobSkills, JobApplication, UserSkills
@@ -17,5 +17,6 @@ __all__ = [
     'LearningManagementStatus',
     'LearningManagement',
     'LearningResource',
-    'NotificationPreference'
+    'NotificationPreference',
+    'UserEmailSetting'
 ]

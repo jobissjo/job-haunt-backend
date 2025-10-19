@@ -162,3 +162,4 @@ class JobApplicationRetrieveUpdateDestroyView(generics.RetrieveUpdateDestroyAPIV
         if self.request.user.is_staff:
             return JobApplication.objects.all()
         return JobApplication.objects.filter(user=self.request.user)
+

@@ -1,6 +1,6 @@
 from rest_framework import serializers
 from apis import models
-from apis.models.user_management import CustomUser, Profile, SocialLink, NotificationPreference
+from apis.models.user_management import CustomUser, Profile, SocialLink, NotificationPreference, UserEmailSetting
 from apis.models.job_management import UserSkills, JobSkills
 
 
@@ -140,3 +140,22 @@ class NotificationPreferenceSerializer(serializers.ModelSerializer):
         instance.in_app = validated_data.get('in_app', instance.in_app)
         instance.save()
         return instance
+
+
+class UserEmailSettingSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = UserEmailSetting
+        fields = ['id', 'user', 'from_email', 'username', 'password', 'use_tls', 'use_ssl', 'host', 'port', 'is_active', 'created_at', 'updated_at']
+        read_only_fields = ['id', 'created_at', 'updated_at', 'user']
+
+    
+    def create(self, validated_data):
+        request = self.context.get('request')
+        if request and request.user.is_authenticated:
+            validated_data['user'] = request.user
+            is_active = validated_data.get('is_active', False)
+            if is_active:
+                UserEmailSetting.objects.filter(user=request.user).update(is_active=False)
+        else:
+            raise serializers.ValidationError("User is not authenticated")
+        return super().create(validated_data)

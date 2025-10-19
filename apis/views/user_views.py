@@ -2,7 +2,7 @@ from nt import error
 from rest_framework.response import Response
 from rest_framework import generics, permissions
 from drf_spectacular.utils import extend_schema, extend_schema_view
-from apis.models import CustomUser, Profile, UserSkills, NotificationPreference
+from apis.models import CustomUser, Profile, UserSkills, NotificationPreference, UserEmailSetting
 from apis.serializers import (
     UserSerializer,
     UserCreateSerializer,
@@ -10,7 +10,8 @@ from apis.serializers import (
     UserSkillsSerializer,
     UserUpdateSerializer,
     NotificationPreferenceSerializer,
-    UpdateUserResumeSerializer 
+    UpdateUserResumeSerializer,
+    UserEmailSettingSerializer
 )
 from apis.utils.common import ServiceError
 
@@ -236,7 +237,23 @@ class UpdateUserResumeView(generics.UpdateAPIView):
 
         
 
-
+@extend_schema_view(
+    get=extend_schema(
+        summary="Get user notification preference",
+        description="Retrieve the notification preference for the authenticated user",
+        tags=["Notification Preference"]
+    ),
+    put=extend_schema(
+        summary="Update user notification preference",
+        description="Update the notification preference for the authenticated user",
+        tags=["Notification Preference"]
+    ),
+    patch=extend_schema(
+        summary="Partially update user notification preference",
+        description="Partially update the notification preference for the authenticated user",
+        tags=["Notification Preference"]
+    )
+)
 class GetOrUpdateUserNotificationPreferenceView(generics.RetrieveUpdateAPIView):
     queryset = NotificationPreference.objects.all()
     serializer_class = NotificationPreferenceSerializer
@@ -248,3 +265,63 @@ class GetOrUpdateUserNotificationPreferenceView(generics.RetrieveUpdateAPIView):
                 return self.request.user.notification_preference
             return NotificationPreference.objects.create(user=self.request.user)
         raise ServiceError(error_message='User not authenticated', error_code=401)
+
+
+@extend_schema_view(
+    get=extend_schema(
+        summary="List user email settings",
+        description="Retrieve a list of email settings for the authenticated user",
+        tags=["User Email Settings"]
+    ),
+    post=extend_schema(
+        summary="Create user email setting",
+        description="Add a new email setting for the authenticated user",
+        tags=["User Email Settings"]
+    )
+)
+class UserEmailSettingListCreateView(generics.ListCreateAPIView):
+    serializer_class = UserEmailSettingSerializer
+    permission_classes = [permissions.IsAuthenticated]
+    
+    def get_queryset(self):
+        return UserEmailSetting.objects.filter(user=self.request.user)
+
+
+@extend_schema_view(
+    get=extend_schema(
+        summary="Retrieve user email setting",
+        description="Get details of a specific email setting for the authenticated user",
+        tags=["User Email Settings"]
+    ),
+    put=extend_schema(
+        summary="Update user email setting",
+        description="Update an email setting for the authenticated user",
+        tags=["User Email Settings"]
+    ),
+    patch=extend_schema(
+        summary="Partially update user email setting",
+        description="Partially update an email setting for the authenticated user",
+        tags=["User Email Settings"]
+    ),
+    delete=extend_schema(
+        summary="Delete user email setting",
+        description="Remove an email setting for the authenticated user",
+        tags=["User Email Settings"]
+    )
+)
+class UserEmailSettingRetrieveUpdateDestroyView(generics.RetrieveUpdateDestroyAPIView):
+    serializer_class = UserEmailSettingSerializer
+    permission_classes = [permissions.IsAuthenticated]
+    
+    def get_object(self):
+        email_setting_id = self.kwargs.get('pk')
+        if self.request.user.is_authenticated:
+            if hasattr(self.request.user, 'user_email_settings'):
+                if email_setting := self.request.user.user_email_settings.filter(id=email_setting_id).first():
+                    return email_setting
+            raise ServiceError(error_message='User email setting not found', error_code=404)
+            
+        raise ServiceError(error_message='User not authenticated', error_code=401)
+
+    
+    

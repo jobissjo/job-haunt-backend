@@ -18,6 +18,8 @@ from apis.views import (
     UserSkillsRetrieveUpdateDestroyView,
     UpdateUserProfileView,
     UpdateUserResumeView,
+    UserEmailSettingListCreateView,
+    UserEmailSettingRetrieveUpdateDestroyView,
     # Job views
     JobApplicationStatusListCreateView,
     JobApplicationStatusRetrieveUpdateDestroyView,
@@ -57,6 +59,10 @@ urlpatterns = [
     path('users/', UserListCreateView.as_view(), name='user_list_create'),
     path('users/<int:pk>/', UserRetrieveUpdateDestroyView.as_view(), name='user_detail'),
     path('notification-preference/', GetOrUpdateUserNotificationPreferenceView.as_view(), name='notification_preference'),
+
+    # EMAIL Settings
+    path('email-settings/', UserEmailSettingListCreateView.as_view(), name='email_settings_list_create'),
+    path('email-settings/<int:pk>/', UserEmailSettingRetrieveUpdateDestroyView.as_view(), name='email_settings_detail'),
     
     # Profile endpoints
     path('profiles/', ProfileListView.as_view(), name='profile_list'),
