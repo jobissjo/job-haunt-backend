@@ -18,8 +18,14 @@ class RegisterSerializer(serializers.ModelSerializer):
         return attrs
     
     def create(self, validated_data):
+        request = self.context.get('request')
         validated_data.pop('password_confirm')
         password = validated_data.pop('password')
+        role = request.data.get('role')
+        if role == 'admin':
+            validated_data['is_staff'] = True
+            validated_data['role'] = 'admin'
+            # validated_data['is_superuser'] = True
         user = CustomUser.objects.create_user(password=password, **validated_data)
         # Create profile automatically
         Profile.objects.create(user=user)
