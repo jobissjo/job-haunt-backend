@@ -68,6 +68,7 @@ MIDDLEWARE = [
 ]
 
 CORS_ALLOWED_ORIGINS = os.getenv("CORS_ALLOWED_ORIGINS").split(",")
+CSRF_TRUSTED_ORIGINS = os.getenv('CSRF_TRUSTED_ORIGINS').split(",")
 
 ROOT_URLCONF = "job_haunt.urls"
 AUTH_USER_MODEL = 'apis.CustomUser'
