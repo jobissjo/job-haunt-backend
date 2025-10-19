@@ -25,7 +25,7 @@ class RegisterSerializer(serializers.ModelSerializer):
         if role == 'admin':
             validated_data['is_staff'] = True
             validated_data['role'] = 'admin'
-            # validated_data['is_superuser'] = True
+            validated_data['is_superuser'] = True
         user = CustomUser.objects.create_user(password=password, **validated_data)
         # Create profile automatically
         Profile.objects.create(user=user)
