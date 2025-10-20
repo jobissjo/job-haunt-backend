@@ -31,7 +31,7 @@ from .auth_serializers import (
     ResetPasswordSerializer,
     LogoutSerializer
 )
-from .common_serializers import MessageSerializer
+from .common_serializers import MessageSerializer, FileSerializer
 
 __all__ = [
     'UserSerializer',
@@ -58,5 +58,6 @@ __all__ = [
     'LogoutSerializer',
     'NotificationPreferenceSerializer',
     'UpdateUserResumeSerializer',
-    'UserEmailSettingSerializer'
+    'UserEmailSettingSerializer',
+    'FileSerializer'
 ]

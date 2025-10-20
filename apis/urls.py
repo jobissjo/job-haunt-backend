@@ -39,6 +39,11 @@ from apis.views import (
     # Kanbanboard Views
     KanbanBoardLearningPlanView,
     KanbanBoardLearningResourceView,
+
+    # Admin Views
+    AdminStatsView,
+    ExportAllTablesView,
+    ImportJSONView,
 )
 
 urlpatterns = [
@@ -99,4 +104,9 @@ urlpatterns = [
     # KanbanBoardView
     path('kanban-board-learning-plans/', KanbanBoardLearningPlanView.as_view(), name='kanban_board_learning_plans'),
     path('kanban-board-learning-resources/', KanbanBoardLearningResourceView.as_view(), name='kanban_board_learning_resources'),
+
+    path('admin/stats', AdminStatsView.as_view(), name='admin_stats'),
+    path('admin/export-all-tables/', ExportAllTablesView.as_view(), name='export_all_tables'),
+    path('admin/import-json/', ImportJSONView.as_view(), name='import_json'),
+    
 ]

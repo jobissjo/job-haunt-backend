@@ -229,3 +229,5 @@ SIMPLE_JWT = {
     
     'JTI_CLAIM': 'jti',
 }
+
+SECRET_OPERATION_TOKEN = os.getenv('SECRET_OPERATION_TOKEN')

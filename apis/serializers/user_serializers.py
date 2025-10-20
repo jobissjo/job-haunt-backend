@@ -25,11 +25,11 @@ class UserSerializer(serializers.ModelSerializer):
     class Meta:
         model = CustomUser
         fields = [
-            'id', 'username', 'email', 'phone_number', 'first_name', 
+            'id', 'username', 'email', 'phone_number', 'first_name', 'password',
             'last_name', 'role', 'is_active', 'date_joined', 'profile', 'social_links'
         ]
         read_only_fields = ['id', 'date_joined', 'role', ]
-    
+
     
 class UserUpdateSerializer(serializers.ModelSerializer):
     bio = serializers.CharField(allow_blank=True, required=False)
@@ -99,9 +99,12 @@ class UserCreateSerializer(serializers.ModelSerializer):
         validated_data.pop('password_confirm')
         password = validated_data.pop('password')
         user = CustomUser.objects.create_user(password=password, **validated_data)
+        SocialLink.objects.create(user=user)
+        NotificationPreference.objects.create(user=user)
         # Create profile automatically
         Profile.objects.create(user=user)
         return user
+    
 
 
 class JobSkillsSerializer(serializers.ModelSerializer):

@@ -7,6 +7,7 @@ from apis.serializers import (
     JobApplicationSerializer,
     JobApplicationCreateSerializer,
 )
+from apis.permissions import IsAdminUserOrAuthenticatedReadOnly
 
 
 @extend_schema_view(
@@ -70,7 +71,7 @@ class JobApplicationStatusRetrieveUpdateDestroyView(generics.RetrieveUpdateDestr
 class JobSkillsListCreateView(generics.ListCreateAPIView):
     queryset = JobSkills.objects.all()
     serializer_class = JobSkillsSerializer
-    permission_classes = [permissions.IsAdminUser]
+    permission_classes = [IsAdminUserOrAuthenticatedReadOnly]
 
 
 @extend_schema_view(

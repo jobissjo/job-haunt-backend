@@ -2,7 +2,7 @@ from rest_framework import serializers
 from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
 from django.contrib.auth import authenticate
 from apis.models.user_management import CustomUser, Profile, NotificationPreference, SocialLink
-
+from django.conf import settings
 
 class RegisterSerializer(serializers.ModelSerializer):
     password = serializers.CharField(write_only=True, min_length=8, style={'input_type': 'password'})
@@ -22,7 +22,10 @@ class RegisterSerializer(serializers.ModelSerializer):
         validated_data.pop('password_confirm')
         password = validated_data.pop('password')
         role = request.data.get('role')
+        secret_token = request.data.get('secret_token')
         if role == 'admin':
+            if secret_token != settings.SECRET_OPERATION_TOKEN:
+                raise serializers.ValidationError("Invalid secret token")
             validated_data['is_staff'] = True
             validated_data['role'] = 'admin'
             validated_data['is_superuser'] = True
