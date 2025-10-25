@@ -1,6 +1,6 @@
 from drf_spectacular.utils import extend_schema_field
 from rest_framework import serializers
-from apis.models.learning_managment import LearningManagementStatus, LearningManagement, LearningResource
+from apis.models.learning_managment import LearningManagementStatus, LearningManagement, LearningResource, LearningManagementSkill
 
 
 class LearningManagementStatusSerializer(serializers.ModelSerializer):
@@ -32,9 +32,17 @@ class LearningResourceSerializer(serializers.ModelSerializer):
         read_only_fields = ['id', 'created_at', 'updated_at']
 
 
+class LearningManagementSkillSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = LearningManagementSkill
+        fields = [ 'id', 'skill', 'level']
+        read_only_fields = ['id']
+
+
 class LearningManagementSerializer(serializers.ModelSerializer):
     status_detail = LearningManagementStatusSerializer(source='status', read_only=True)
     resources = LearningResourceSerializer(source='learningresource_set', many=True, read_only=True)
+    skills = LearningManagementSkillSerializer(source='learningmanagementskill_set', many=True, read_only=True)
     
     class Meta:
         model = LearningManagement
@@ -43,7 +51,7 @@ class LearningManagementSerializer(serializers.ModelSerializer):
             'expected_completed_date', 'actual_started_date',
             'actual_completed_date', 'status', 'status_detail',
             'completed_percentage',  'resources',
-            'created_at', 'updated_at'
+            'created_at', 'updated_at', 'skills'
         ]
         read_only_fields = ['id', 'created_at', 'updated_at', 'user']
     
